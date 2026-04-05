@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="application-name" content="LifePlanner 7">
+    <meta name="apple-mobile-web-app-title" content="LifePlanner">
+    <title>LifePlanner 7</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <meta name="theme-color" content="#7c3aed">
+</head>
+
+<body>
+    <div id="app" class="app-shell">
+        <header class="app-hero">
+            <div class="hero-inner">
+                <div class="hero-brand">
+                    <div class="hero-icon-wrap" aria-hidden="true">🏠</div>
+                    <div class="hero-text">
+                        <p class="hero-greeting" id="hero-greeting">Guten Tag 👋</p>
+                        <h1 class="hero-title">LifePlanner <span class="hero-version">7</span></h1>
+                        <p class="hero-tagline">Professioneller Haushaltsplaner – mit PDF-Export, Drag &amp; Drop,
+                            Statistiken &amp; Push</p>
+                        <div class="hero-badges">
+                            <span class="pill pill-streak" id="pill-streak">🔥 3 Streak</span>
+                            <span class="pill pill-level" id="pill-level">🏆 Anfänger 🌱</span>
+                            <span class="pill pill-meal" id="pill-meal">🍴 Heute: Hähnchen mit Reis 🍗</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-aside">
+                    <div class="hero-toolbar">
+                        <button type="button" class="hero-tool-btn" id="btn-toggle-dark" title="Dark Mode">🌙</button>
+                        <button type="button" class="hero-tool-btn" id="btn-quick-pdf" title="PDF Export">📥</button>
+                        <button type="button" class="hero-tool-btn" id="btn-notifications" title="Erinnerungen">🔔
+                            <span class="badge" id="notification-badge"></span>
+                        </button>
+                        <span class="pro-badge" title="LifePlanner Pro">✨ V5 Pro</span>
+                        <button type="button" class="hero-tool-btn" id="btn-settings" title="Einstellungen">⚙️</button>
+                    </div>
+                    <div class="glass-card progress-card">
+                        <div class="progress-card-head">
+                            <span>Fortschritt</span>
+                            <div class="progress-ring-wrap">
+                                <svg class="progress-ring" viewBox="0 0 36 36" aria-hidden="true">
+                                    <path class="progress-ring-bg"
+                                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    <path class="progress-ring-fill" id="progress-ring-fill" stroke-dasharray="0, 100"
+                                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                </svg>
+                                <span class="progress-ring-label" id="progress-pct">0%</span>
+                            </div>
+                        </div>
+                        <div class="progress-stats">
+                            <span><strong id="progress-done">0</strong> erledigt</span>
+                            <span><strong id="progress-open">0</strong> offen</span>
+                        </div>
+                        <div class="progress-reminder" id="hero-reminder">🔔 18:00 – Einkaufen für Abendessen</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <nav class="top-nav" aria-label="Hauptnavigation">
+            <div class="top-nav-scroll">
+                <button type="button" class="nav-tab active" data-view="dashboard"><span class="nav-tab-ic">📊</span>
+                    Dashboard</button>
+                <button type="button" class="nav-tab" data-view="tasks"><span class="nav-tab-ic">📋</span>
+                    Aufgaben</button>
+                <button type="button" class="nav-tab" data-view="meals"><span class="nav-tab-ic">🍴</span>
+                    Essen</button>
+                <button type="button" class="nav-tab" data-view="calendar"><span class="nav-tab-ic">📅</span>
+                    Kalender</button>
+                <button type="button" class="nav-tab" data-view="stats"><span class="nav-tab-ic">📈</span>
+                    Statistik</button>
+                <button type="button" class="nav-tab" data-view="family"><span class="nav-tab-ic">👨‍👩‍👧</span>
+                    Familie</button>
+                <button type="button" class="nav-tab" data-view="notes"><span class="nav-tab-ic">📝</span>
+                    Notizen</button>
+                <button type="button" class="nav-tab" data-view="automation"><span class="nav-tab-ic">⚡</span>
+                    Automatik</button>
+                <button type="button" class="nav-tab" data-view="login"><span class="nav-tab-ic">🔐</span>
+                    Login</button>
+                <button type="button" class="nav-tab" data-view="backend"><span class="nav-tab-ic">🗄️</span>
+                    Backend</button>
+            </div>
+        </nav>
+
+        <main class="main-content">
+
+            <section class="view active" id="view-dashboard">
+                <div class="dash-metrics">
+                    <div class="metric-card metric-open">
+                        <div class="metric-ic">📋</div>
+                        <div class="metric-body">
+                            <span class="metric-value" id="dash-m-open">0</span>
+                            <span class="metric-label">Offen</span>
+                            <span class="metric-hint">Heute aktiv</span>
+                        </div>
+                    </div>
+                    <div class="metric-card metric-done">
+                        <div class="metric-ic">✓</div>
+                        <div class="metric-body">
+                            <span class="metric-value" id="dash-m-done">0</span>
+                            <span class="metric-label">Erledigt</span>
+                            <span class="metric-hint">Insgesamt</span>
+                        </div>
+                    </div>
+                    <div class="metric-card metric-shop">
+                        <div class="metric-ic">🛒</div>
+                        <div class="metric-body">
+                            <span class="metric-value" id="dash-m-shop">0/0</span>
+                            <span class="metric-label">Einkauf</span>
+                            <span class="metric-hint" id="dash-m-shop-hint">0 Artikel</span>
+                        </div>
+                    </div>
+                    <div class="metric-card metric-meal">
+                        <div class="metric-ic">👨‍🍳</div>
+                        <div class="metric-body">
+                            <span class="metric-value" id="dash-m-meals">7</span>
+                            <span class="metric-label">Essen</span>
+                            <span class="metric-hint">Tage geplant</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dash-grid">
+                    <article class="panel panel-focus">
+                        <div class="panel-head">
+                            <h2>⚡ Heute im Fokus</h2>
+                            <div class="panel-actions">
+                                <span class="panel-sub" id="dash-focus-date">—</span>
+                                <button type="button" class="btn-ghost" id="btn-dash-pdf">📥 PDF</button>
+                            </div>
+                        </div>
+                        <div id="dash-focus-body" class="focus-body">
+                            <div id="today-tasks" class="task-list-pro"></div>
+                        </div>
+                        <div class="panel-subsection">
+                            <h3 class="subsection-title">Demnächst</h3>
+                            <div id="dash-upcoming" class="upcoming-list"></div>
+                        </div>
+                    </article>
+                    <article class="panel panel-quick">
+                        <div class="panel-head">
+                            <h2>➕ Schnell hinzufügen</h2>
+                        </div>
+                        <form id="form-dash-task" class="quick-form">
+                            <input type="text" id="dash-task-name" placeholder="z. B. Fenster putzen…"
+                                autocomplete="off">
+                            <input type="date" id="dash-task-date" required>
+                            <div class="quick-form-row">
+                                <select id="dash-task-priority">
+                                    <option value="low">🟢 Niedrig</option>
+                                    <option value="medium" selected>🟠 Mittel</option>
+                                    <option value="high">🔴 Hoch</option>
+                                </select>
+                                <select id="dash-task-category">
+                                    <option value="Reinigung">Reinigung</option>
+                                    <option value="Einkauf">Einkauf</option>
+                                    <option value="Haushalt" selected>Haushalt</option>
+                                </select>
+                            </div>
+                            <select id="dash-task-person"></select>
+                            <button type="submit" class="btn-gradient-wide">+ Aufgabe speichern</button>
+                        </form>
+                    </article>
+                </div>
+            </section>
+
+            <section class="view" id="view-tasks">
+                <div class="page-toolbar">
+                    <div>
+                        <h2 class="page-title">📋 Alle Aufgaben</h2>
+                        <p class="page-meta" id="tasks-meta">0 von 0 • 0 erledigt • ↕ Ziehen zum Sortieren</p>
+                    </div>
+                    <div class="toolbar-actions">
+                        <input type="search" id="task-search" class="search-input" placeholder="Suchen…"
+                            autocomplete="off">
+                        <button type="button" class="btn-icon-soft" id="btn-task-filter" title="Filter">⚙️</button>
+                        <button type="button" class="btn-icon-soft" id="btn-tasks-pdf" title="PDF">📥</button>
+                        <button type="button" class="btn-primary-soft" id="btn-new-task">+ Neue Aufgabe</button>
+                    </div>
+                </div>
+                <div class="filter-bar">
+                    <button type="button" class="filter-btn active" data-filter="all">Alle</button>
+                    <button type="button" class="filter-btn" data-filter="open">Offen</button>
+                    <button type="button" class="filter-btn" data-filter="urgent">Dringend</button>
+                    <button type="button" class="filter-btn" data-filter="done">Erledigt</button>
+                </div>
+                <div class="sort-bar">
+                    <select id="task-sort">
+                        <option value="date-asc">Datum ↑</option>
+                        <option value="date-desc">Datum ↓</option>
+                        <option value="priority">Priorität</option>
+                        <option value="person">Person</option>
+                        <option value="manual">Manuelle Reihenfolge</option>
+                    </select>
+                    <select id="task-filter-person">
+                        <option value="all">Alle Personen</option>
+                    </select>
+                </div>
+                <div id="tasks-list" class="tasks-list-pro"></div>
+            </section>
+
+            <section class="view" id="view-meals">
+                <div class="meals-layout">
+                    <article class="panel panel-meals">
+                        <div class="panel-head">
+                            <div>
+                                <h2>🍴 Essensplan</h2>
+                                <p class="panel-sub">Plane die Woche professionell</p>
+                            </div>
+                            <button type="button" class="btn-ghost" id="btn-meals-pdf">📥 PDF</button>
+                        </div>
+                        <div class="meal-add-row">
+                            <select id="meal-day-select"></select>
+                            <input type="text" id="meal-dish-input" placeholder="Gericht…">
+                            <select id="meal-tag-select">
+                                <option>Schnell</option>
+                                <option>Protein</option>
+                                <option>Gesund</option>
+                                <option>Budget</option>
+                                <option>Familie</option>
+                                <option>Leicht</option>
+                                <option>Wochenende</option>
+                            </select>
+                            <button type="button" class="btn-pink" id="btn-meal-save">+ Speichern</button>
+                        </div>
+                        <div id="meal-grid" class="meal-grid"></div>
+                    </article>
+                    <article class="panel panel-shopping-side">
+                        <div class="panel-head">
+                            <div>
+                                <h2>🛒 Einkaufsliste</h2>
+                                <p class="panel-sub" id="shopping-meta">0/0 erledigt</p>
+                            </div>
+                            <button type="button" class="btn-icon-soft" id="btn-shopping-side-pdf"
+                                title="PDF">📥</button>
+                        </div>
+                        <div class="shopping-compact-input">
+                            <input type="text" id="shopping-input" placeholder="Artikel…" autocomplete="off">
+                            <div class="qty-row">
+                                <button type="button" class="qty-btn" id="shop-qty-minus">−</button>
+                                <input type="number" id="shopping-qty" min="1" value="1" class="qty-input">
+                                <button type="button" class="qty-btn" id="shop-qty-plus">+</button>
+                                <select id="shopping-unit" class="unit-select">
+                                    <option>Stk</option>
+                                    <option>kg</option>
+                                    <option>l</option>
+                                </select>
+                                <select id="shopping-category" class="unit-select">
+                                    <option value="Obst & Gemüse">🥬 Obst &amp; Gemüse</option>
+                                    <option value="Milchprodukte">🧀 Milch</option>
+                                    <option value="Fleisch & Fisch">🥩 Fleisch</option>
+                                    <option value="Backwaren">🍞 Backwaren</option>
+                                    <option value="Getränke">🥤 Getränke</option>
+                                    <option value="Haushalt">🧹 Haushalt</option>
+                                    <option value="Sonstiges">📦 Sonstiges</option>
+                                </select>
+                                <button type="button" class="btn-orange-plus" id="btn-add-shopping">+</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-link-danger" id="btn-clear-bought">Gekaufte entfernen</button>
+                        <div id="shopping-list" class="shopping-list"></div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="view" id="view-calendar">
+                <div class="calendar-layout">
+                    <article class="panel panel-calendar">
+                        <div class="panel-head cal-nav">
+                            <button type="button" class="btn-icon-soft" id="cal-prev">◀</button>
+                            <h2 id="cal-month-label">—</h2>
+                            <button type="button" class="btn-icon-soft" id="cal-next">▶</button>
+                        </div>
+                        <div class="cal-weekdays">
+                            <span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span><span>Sa</span><span>So</span>
+                        </div>
+                        <div id="cal-grid" class="cal-grid"></div>
+                    </article>
+                    <article class="panel panel-appointments">
+                        <h2>📅 Termine</h2>
+                        <div id="cal-sidebar" class="cal-sidebar"></div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="view" id="view-stats">
+                <div class="stats-hero-card">
+                    <h2>📊 Wochenübersicht</h2>
+                    <p class="panel-sub">Aufgaben der letzten 7 Tage</p>
+                    <div class="week-chart" id="stats-week-chart"></div>
+                    <div class="chart-legend">
+                        <span><i class="lg-done"></i> Erledigt</span>
+                        <span><i class="lg-open"></i> Offen</span>
+                    </div>
+                </div>
+                <div class="stats-triple">
+                    <article class="panel">
+                        <h3>🕒 Kategorien</h3>
+                        <div id="stats-categories" class="stats-bars"></div>
+                    </article>
+                    <article class="panel">
+                        <h3>🔥 Prioritäten</h3>
+                        <div id="stats-priorities" class="priority-cards"></div>
+                    </article>
+                    <article class="panel">
+                        <h3>🏆 Rangliste</h3>
+                        <div id="stats-ranking" class="ranking-list"></div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="view" id="view-family">
+                <div id="family-member-cards" class="family-cards"></div>
+                <article class="panel family-manage">
+                    <h2>👤 Familienverwaltung</h2>
+                    <div class="family-split">
+                        <div class="family-box">
+                            <h3>Mitglied hinzufügen</h3>
+                            <input type="text" id="fam-name" placeholder="Name">
+                            <input type="email" id="fam-email" placeholder="E-Mail (optional)">
+                            <select id="fam-role">
+                                <option value="member">Mitglied</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                            <button type="button" class="btn-gradient-wide" id="btn-fam-invite">+ Einladen</button>
+                        </div>
+                        <div class="family-box">
+                            <h3>Zuweisungen</h3>
+                            <div id="family-assignments" class="assignments-list"></div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-secondary" id="btn-manage-household">Erweitert bearbeiten…</button>
+                </article>
+            </section>
+
+            <section class="view" id="view-notes">
+                <article class="panel">
+                    <div class="panel-head">
+                        <h2>📝 Neue Notiz</h2>
+                    </div>
+                    <div class="note-create">
+                        <input type="text" id="note-title" placeholder="Titel…">
+                        <textarea id="note-body" placeholder="Inhalt…" rows="3"></textarea>
+                        <button type="button" class="btn-note-create" id="btn-note-add">+ Notiz erstellen</button>
+                    </div>
+                </article>
+                <div id="notes-grid" class="notes-grid"></div>
+            </section>
+
+            <section class="view" id="view-automation">
+                <div class="auto-layout">
+                    <article class="panel">
+                        <h2>🔄 Wiederkehrende Aufgaben</h2>
+                        <p class="panel-sub" id="auto-recurring-count">0 aktive Automatisierungen</p>
+                        <div id="auto-recurring-list" class="recurring-list"></div>
+                    </article>
+                    <div class="auto-col">
+                        <article class="panel">
+                            <h2>🔔 Push-Benachrichtigungen</h2>
+                            <p class="panel-sub" id="push-status">Noch nicht aktiviert</p>
+                            <button type="button" class="btn-gradient-wide" id="btn-push-enable">🔔 Benachrichtigungen
+                                aktivieren</button>
+                        </article>
+                        <article class="panel">
+                            <h2>⏰ Erinnerungen</h2>
+                            <p class="panel-sub" id="auto-rem-count">0 aktiv</p>
+                            <div id="auto-reminders-list" class="reminders-list"></div>
+                            <div class="reminder-add">
+                                <input type="time" id="rem-time" value="18:00">
+                                <input type="text" id="rem-text" placeholder="Text…">
+                                <button type="button" class="btn-rem-add" id="btn-rem-add">+ Hinzufügen</button>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section class="view" id="view-login">
+                <div class="login-split">
+                    <div class="login-promo">
+                        <span class="secure-badge">🛡️ Sicherer Zugang</span>
+                        <h2>Login &amp; Registrierung</h2>
+                        <p>Familienmitglieder können sich anmelden und Aufgaben erhalten.</p>
+                        <ul class="login-features">
+                            <li>🗄️ Firebase / Supabase bereit</li>
+                            <li>📱 Mobile responsive</li>
+                            <li>🛡️ Admin &amp; Mitglied Rollen</li>
+                            <li>💜 Ende-zu-Ende geplant</li>
+                        </ul>
+                    </div>
+                    <article class="panel login-form-card">
+                        <h2>🔐 Anmeldung</h2>
+                        <form id="form-login">
+                            <label class="sr-only" for="login-email">E-Mail</label>
+                            <input type="email" id="login-email" placeholder="E-Mail" autocomplete="username">
+                            <label class="sr-only" for="login-pass">Passwort</label>
+                            <input type="password" id="login-pass" placeholder="Passwort"
+                                autocomplete="current-password">
+                            <button type="submit" class="btn-gradient-wide">→ Einloggen</button>
+                        </form>
+                        <p class="login-foot">Noch nicht verbunden</p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="view" id="view-backend">
+                <div class="backend-split">
+                    <article class="panel">
+                        <h2>🗄️ Backend Setup</h2>
+                        <label class="field-label">Modus</label>
+                        <select id="backend-mode">
+                            <option value="demo" selected>Demo / Local Storage</option>
+                            <option value="supabase">Supabase (Cloud)</option>
+                        </select>
+                        <label class="field-label">SUPABASE_URL</label>
+                        <input type="text" id="backend-url" placeholder="https://….supabase.co">
+                        <label class="field-label">SUPABASE_ANON_KEY</label>
+                        <input type="password" id="backend-key" placeholder="anon key">
+                        <p class="backend-status" id="backend-status">Aktuell: Demo / Local Storage</p>
+                        <div class="backend-btns">
+                            <button type="button" class="btn-outline" id="btn-supabase-test">🔗 Verbindung
+                                testen</button>
+                            <button type="button" class="btn-blue" id="btn-supabase-push">⬆️ Daten hochladen</button>
+                            <button type="button" class="btn-blue" id="btn-supabase-pull">⬇️ Daten
+                                herunterladen</button>
+                        </div>
+                        <p class="backend-hint">Vorher in Supabase <code>supabase/schema.sql</code> ausführen. App per
+                            HTTP(s) öffnen (nicht file://), sonst blockiert der Browser das Supabase-Modul.</p>
+                        <div class="backend-btns">
+                            <button type="button" class="btn-blue" id="btn-backend-seed">⚡ Testdaten</button>
+                            <button type="button" class="btn-outline-danger" id="btn-backend-reset">🗑️
+                                Zurücksetzen</button>
+                            <button type="button" class="btn-green" id="btn-backend-pdf-all">📥 Alles als PDF</button>
+                            <button type="button" class="btn-outline" id="btn-backend-pdf-shop">Einkauf PDF</button>
+                        </div>
+                    </article>
+                    <article class="panel">
+                        <h2>🏅 Features Status</h2>
+                        <ul class="feature-checklist">
+                            <li>✅ Todos mit LocalStorage</li>
+                            <li>✅ Dark Mode</li>
+                            <li>✅ Familienmitglieder</li>
+                            <li>✅ Essensplan</li>
+                            <li>✅ Einkaufsliste mit Mengen</li>
+                            <li>✅ Erinnerungen</li>
+                            <li>✅ Notizen</li>
+                            <li>✅ Suche &amp; Filter</li>
+                            <li>✅ Streak &amp; Level (Demo)</li>
+                            <li>✅ Toasts</li>
+                            <li>✅ Mobile Navigation</li>
+                            <li>✅ Drag &amp; Drop Sortierung</li>
+                            <li>✅ Supabase Sync (optional)</li>
+                        </ul>
+                        <h3 class="mt-1">Aktuelle Daten</h3>
+                        <div class="data-counts" id="backend-counts"></div>
+                    </article>
+                </div>
+            </section>
+        </main>
+
+        <div class="modal-overlay" id="modal-task">
+            <div class="modal modal-wide">
+                <div class="modal-header">
+                    <h3 id="modal-task-title">Neue Aufgabe</h3>
+                    <button type="button" class="btn-close" data-close="modal-task">✕</button>
+                </div>
+                <form id="form-task">
+                    <input type="hidden" id="task-id">
+                    <div class="form-group">
+                        <label>Aufgabe</label>
+                        <div class="quick-tasks">
+                            <button type="button" class="quick-task" data-task="Waschen">🧺 Waschen</button>
+                            <button type="button" class="quick-task" data-task="Putzen">🧹 Putzen</button>
+                            <button type="button" class="quick-task" data-task="Einkaufen">🛒 Einkaufen</button>
+                            <button type="button" class="quick-task" data-task="Kochen">🍳 Kochen</button>
+                            <button type="button" class="quick-task" data-task="Müll rausbringen">🗑️ Müll</button>
+                            <button type="button" class="quick-task" data-task="Staubsaugen">🧹 Staubsaugen</button>
+                            <button type="button" class="quick-task" data-task="Abspülen">🍽️ Abspülen</button>
+                            <button type="button" class="quick-task" data-task="Aufräumen">🏠 Aufräumen</button>
+                        </div>
+                        <input type="text" id="task-name" placeholder="Oder eigene Aufgabe…" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="task-date">📅 Datum</label>
+                            <input type="date" id="task-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="task-time">🕐 Uhrzeit</label>
+                            <input type="time" id="task-time">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-person">👤 Zuständig</label>
+                        <select id="task-person" required>
+                            <option value="">Person wählen…</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-category">📂 Kategorie</label>
+                        <select id="task-category">
+                            <option value="Reinigung">Reinigung</option>
+                            <option value="Einkauf">Einkauf</option>
+                            <option value="Haushalt" selected>Haushalt</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>⚡ Priorität</label>
+                        <div class="priority-selector">
+                            <label class="priority-option"><input type="radio" name="task-priority" value="low">
+                                Niedrig</label>
+                            <label class="priority-option"><input type="radio" name="task-priority" value="medium"
+                                    checked> Mittel</label>
+                            <label class="priority-option"><input type="radio" name="task-priority" value="high">
+                                Hoch</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-repeat">🔁 Wiederholen</label>
+                        <select id="task-repeat">
+                            <option value="none">Nicht wiederholen</option>
+                            <option value="daily">Täglich</option>
+                            <option value="weekly">Wöchentlich</option>
+                            <option value="biweekly">Alle 2 Wochen</option>
+                            <option value="monthly">Monatlich</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-notes">📝 Notizen</label>
+                        <textarea id="task-notes" rows="2" placeholder="Optional…"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" data-close="modal-task">Abbrechen</button>
+                        <button type="submit" class="btn-primary">💾 Speichern</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="modal-household">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3>👨‍👩‍👧 Haushalt erweitert</h3>
+                    <button type="button" class="btn-close" data-close="modal-household">✕</button>
+                </div>
+                <div class="household-input-group">
+                    <input type="text" id="member-name" placeholder="Name…">
+                    <div class="avatar-picker" id="avatar-picker">
+                        <button type="button" class="avatar-option selected" data-avatar="😀">😀</button>
+                        <button type="button" class="avatar-option" data-avatar="👩">👩</button>
+                        <button type="button" class="avatar-option" data-avatar="👨">👨</button>
+                        <button type="button" class="avatar-option" data-avatar="👧">👧</button>
+                        <button type="button" class="avatar-option" data-avatar="👦">👦</button>
+                        <button type="button" class="avatar-option" data-avatar="🧑">🧑</button>
+                    </div>
+                    <button type="button" class="btn-primary" id="btn-add-member">+ Hinzufügen</button>
+                </div>
+                <div id="members-list" class="members-manage-list"></div>
+                <div class="form-actions">
+                    <button type="button" class="btn-primary" data-close="modal-household">Fertig</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="modal-notifications">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3>🔔 Erinnerungen</h3>
+                    <button type="button" class="btn-close" data-close="modal-notifications">✕</button>
+                </div>
+                <div id="notifications-list" class="notifications-list"></div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="btn-clear-notifications">Alle löschen</button>
+                    <button type="button" class="btn-primary" data-close="modal-notifications">Schließen</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="modal-settings">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3>⚙️ Einstellungen</h3>
+                    <button type="button" class="btn-close" data-close="modal-settings">✕</button>
+                </div>
+                <div class="settings-content">
+                    <div class="setting-item">
+                        <label>🌙 Dark Mode</label>
+                        <label class="toggle"><input type="checkbox" id="setting-darkmode"><span
+                                class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item">
+                        <label>🔔 Browser-Benachrichtigungen</label>
+                        <label class="toggle"><input type="checkbox" id="setting-notifications"><span
+                                class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item">
+                        <label>🏠 Haushaltsname</label>
+                        <input type="text" id="setting-household-name" placeholder="Mein Haushalt">
+                    </div>
+                    <hr>
+                    <div class="setting-item danger">
+                        <label>🗑️ Alle Daten löschen</label>
+                        <button type="button" class="btn-danger" id="btn-reset-all">Zurücksetzen</button>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-primary" data-close="modal-settings">Schließen</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="toast-container" class="toast-container"></div>
+        <div id="print-root" class="print-root" hidden></div>
+    </div>
+
+    <script src="js/store.js"></script>
+    <script src="js/supabase-bridge.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/tasks.js"></script>
+    <script src="js/shopping.js"></script>
+    <script src="js/calendar.js"></script>
+    <script src="js/stats.js"></script>
+    <script src="js/household.js"></script>
+    <script src="js/pages.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
